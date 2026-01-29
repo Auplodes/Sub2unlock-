@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sub4Unlock - Premium Link Locker</title>
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --secondary-color: #28a745;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h2 { color: #333; margin-bottom: 1.5rem; }
+
+        .input-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-generate { background-color: #007bff; color: white; }
+        .btn-generate:hover { background-color: #0056b3; }
+
+        .btn-sub { background-color: var(--primary-color); color: white; margin-top: 20px; }
+        
+        .btn-unlock { 
+            background-color: #ccc; 
+            color: #666; 
+            cursor: not-allowed; 
+            margin-top: 10px;
+        }
+
+        .btn-unlock.active {
+            background-color: var(--secondary-color);
+            color: white;
+            cursor: pointer;
+        }
+
+        #resultArea {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .short-link {
+            font-weight: bold;
+            color: #007bff;
+            word-break: break-all;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="creator-box">
+        <h2>Create Unlock Link</h2>
+        <div class="input-group">
+            <label>YouTube Channel URL:</label>
+            <input type="url" id="ytUrl" placeholder="https://youtube.com/@YourChannel">
+        </div>
+        <div class="input-group">
+            <label>Destination Link (File/Website):</label>
+            <input type="url" id="destUrl" placeholder="https://yourfile.com/download">
+        </div>
+        <button class="btn btn-generate" onclick="generateLink()">Generate Locked Link</button>
+
+        <div id="resultArea">
+            <p>Aapka Link Taiyar Hai:</p>
+            <p class="short-link" id="finalShortLink"></p>
+            <button class="btn" style="background:#333; color:white;" onclick="copyLink()">Copy Link</button>
+        </div>
+    </div>
+
+    <div id="unlock-box" class="hidden">
+        <h2>Link Locked!</h2>
+        <p>Complete the step to unlock your link.</p>
+        <button class="btn btn-sub" id="subBtn" onclick="handleSubscribe()">1. Subscribe Channel</button>
+        <button class="btn btn-unlock" id="unlockBtn" disabled onclick="handleUnlock()">2. Unlock Link</button>
+    </div>
+</div>
+
+<script>
+    let destinationData = "";
+    let ytData = "";
+
+    function generateLink() {
+        const yt = document.getElementById('ytUrl').value;
+        const dest = document.getElementById('destUrl').value;
+
+        if(!yt || !dest) {
+            alert("Please fill both fields!");
+            return;
+        }
+
+        // Simulating a short ID
+        const shortId = Math.random().toString(36).substring(2, 8);
+        const shortLink = window.location.origin + "/s/" + shortId;
+
+        // Storing data for simulation
+        ytData = yt;
+        destinationData = dest;
+
+        document.getElementById('finalShortLink').innerText = shortLink;
+        document.getElementById('resultArea').style.display = 'block';
+        
+        // Demo purpose: 3 seconds baad "Visitor view" dikhayega
+        setTimeout(() => {
+            if(confirm("Link generate ho gaya! Kya aap dekhna chahte hain user ko kaisa dikhega?")) {
+                showUnlockPage();
+            }
+        }, 500);
+    }
+
+    function showUnlockPage() {
+        document.getElementById('creator-box').classList.add('hidden');
+        document.getElementById('unlock-box').classList.remove('hidden');
+    }
+
+    function handleSubscribe() {
+        window.open(ytData, '_blank');
+        // Fake check: real sites API use karti hain, hum yahan delay de rahe hain
+        setTimeout(() => {
+            const unlockBtn = document.getElementById('unlockBtn');
+            unlockBtn.disabled = false;
+            unlockBtn.classList.add('active');
+            alert("Step Completed! Now click Unlock.");
+        }, 3000);
+    }
+
+    function handleUnlock() {
+        alert("Redirecting to your file...");
+        window.location.href = destinationData;
+    }
+
+    function copyLink() {
+        const text = document.getElementById('finalShortLink').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Link copied!");
+    }
+</script>
+
+</body>
+</html>
+
